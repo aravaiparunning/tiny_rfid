@@ -58,17 +58,17 @@ class RFIDPad
     will_stop = false
     
     request_params = [
-      2, #qvalue (1-15), number of tags to read
-      0, #session,
-      0x1, # maskmem, 0x01 for EPC memory, 0x02 for TID memory and 0x03 for User memory
-      0x0, # 16-bit
-      0, # masklen,
-      0, # maskdata,
-      0, # adr in tid,
-      # lentid  = 0   # Optional
-      # target = 0    # Optional
-      # ant = 0       # Optional
-      # scantime = 0  # Optional
+      14,    # qvalue (1-15), number of tags to read
+      0,    # session,
+      0x1,  # maskmem, 0x01 for EPC memory, 0x02 for TID memory and 0x03 for User memory
+      0x0,  # 16-bit
+      0,    # masklen,
+      0,    # maskdata,
+      0,    # adr in tid,
+      0,    # lentid  = 0   # Optional
+      0,    # target = 0    # Optional
+      0x80, # ant = 0x80 (only one antenna available)       # Optional
+      5,    # scantime = n * 100ms  # Optional
     ].pack("CCCzCCC")
 
     register_callback(RFIDPadCommand::INVENTORY) do |response|
@@ -81,6 +81,9 @@ class RFIDPad
         count = data[1]
       
         # Parse the response for tag data
+        # The reference doc is pretty vague here, but it's
+        # len_byte, epc[12], rssi <repeat the whole thing `count` times>
+        #
         if count >= 1
           ri = 2 # already read ant & count
           while ri < data.length
@@ -101,7 +104,7 @@ class RFIDPad
     send_request(RFIDPadCommand::INVENTORY, request_params)
 
     # Prevent control returning to the caller, which would
-    # end in the program exiting.
+    # likely result in the program exiting.
     loop do
       sleep(1)
       break if will_stop

@@ -1,3 +1,5 @@
+require 'crc16'
+
 # Read serial number response
 # 09 00 4c 00 21 21 10 10  b5 ac
 # ^len
@@ -6,9 +8,11 @@
 #          ^ status
 #             ^ serial number is "21211010"
 #                         ^ CRC16 (lsb, msb)
-
-require 'crc16'
-
+#
+# Minimum viable parser, might be worth abstracting this to 
+# accept struct definitions as they're used all over the spec
+#
+#
 class StateMachine
   
   STATES = [
@@ -55,13 +59,7 @@ class StateMachine
     end
     
     def append_data(bytes)
-      bytes = case bytes
-      when Numeric then [bytes]
-      when String then bytes.bytes
-      when Array then bytes
-      else bytes
-      end
-      
+      bytes = thing_as_bytes(bytes)
       @crc << bytes
       @data += bytes
       did_read bytes.length
@@ -118,14 +116,7 @@ class StateMachine
   def << bytes
     return if bytes.nil?
     
-    bytes = case bytes
-    when Numeric then [bytes]
-    when String then bytes.bytes
-    when Array then bytes
-    else bytes
-    end
-    
-    bytes.each do |b|
+    thing_as_bytes(bytes).each do |b|
       # puts "SM: #{("%02x" % b).colorize(:blue)} (state: #{STATES[@state]})"
       
       case STATES[@state]
