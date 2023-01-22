@@ -6,20 +6,33 @@ class Tag
     @rssi = rssi
   end
   
+  def prefix
+    @epc[0..6]
+  end
   
   def bib_number
     return nil if @epc.nil?
 
-    # [172, 35, 73, 7, 16, 0, 0, 0, 0, 0, 3, 32] => 320
+    # ac2349071000000000000305
     # Strip leading zeros, but treat as a string.
     zi = 0
-    (6..@epc.length).each do |i|
-      if @epc[i] != 0
+    epc = epc_string
+    
+    (12..epc.length).each do |i|
+      if epc[i] != '0'
         zi = i
         break
       end
     end
 
-    @epc[zi..-1].map{|x| x.to_s(16)}.join
+    epc[zi..-1]
+  end
+  
+  def epc_string
+    @epc.map{|x| '%02x' % x}.join
+  end
+  
+  def prefix_string
+    prefix.map{|x| '%02x' % x}.join
   end
 end
