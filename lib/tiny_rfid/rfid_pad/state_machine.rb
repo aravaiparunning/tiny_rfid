@@ -1,5 +1,3 @@
-require 'crc16'
-
 # Read serial number response
 # 09 00 4c 00 21 21 10 10  b5 ac
 # ^len

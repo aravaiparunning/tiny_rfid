@@ -1,0 +1,5 @@
+require 'colorize'
+require 'tiny_rfid/bytes.rb'
+require 'tiny_rfid/tag.rb'
+require 'tiny_rfid/crc16.rb'
+require 'tiny_rfid/rfid_pad.rb'

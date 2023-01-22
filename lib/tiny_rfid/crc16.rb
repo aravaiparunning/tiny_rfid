@@ -1,5 +1,3 @@
-require 'bytes'
-
 # Example usage:
 #
 # q = CRC16.new

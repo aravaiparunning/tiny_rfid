@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
-$:.unshift('lib')
-require "rfid_pad"
+require 'tiny_rfid'
 
 pad = RFIDPad.new("/dev/tty.SLAB_USBtoUART")
 pad.open
+pad.beep(true)
 pad.get_serial_number{|serial_number| puts "Reader Serial Number: #{serial_number.data.inspect}"}
 pad.inventory do |tag|
   if tag.prefix_string.start_with? 'ac23'

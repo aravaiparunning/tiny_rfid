@@ -1,5 +1,3 @@
-require 'bytes'
-
 module RFIDPadCommand
   INVENTORY =	0x01
   READ_DATA =	0x02

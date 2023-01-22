@@ -1,12 +1,6 @@
-require 'bundler'
-require 'rubyserial'
-require 'crc16'
-require 'rfid_pad/serial'
-require 'rfid_pad/command'
-require 'rfid_pad/state_machine'
-require 'tag.rb'
-
-Bundler.require
+require_relative 'rfid_pad/serial'
+require_relative 'rfid_pad/command'
+require_relative 'rfid_pad/state_machine'
 
 class RFIDPad
   include RFIDPadSerial
@@ -51,7 +45,7 @@ class RFIDPad
   end
   
   def beep(flag)
-    send_request(BEEP_SETTING, flag ? 1 : 0)
+    send_request(BEEP_SETTING, flag ? [1] : [0])
   end
 
   def inventory(&block)
