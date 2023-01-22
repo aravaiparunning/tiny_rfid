@@ -1,0 +1,16 @@
+Send serial port request
+05 00 4c dt cl cb
+^len
+   ^ reader addr (default zer)
+      ^ cmd
+         ^ data
+            ^ CRC16
+
+Read serial number response
+09 00 4c 00 21 21 10 10  b5 ac 
+^len
+   ^ reader addr (default zero)
+      ^ reCmd?
+         ^ status
+            ^ serial number is "21211010"
+                         ^ CRC16 (lsb, msb)
